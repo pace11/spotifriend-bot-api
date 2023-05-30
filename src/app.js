@@ -49,29 +49,25 @@ app.post('/say-something', auth, async (req, res) => {
 
 app.post('/test', async (req, res) => {
   try {
-    const result = await axios({
-      method: 'GET',
-      url: `${process.env.URL_SERVICE_API}/spotify-notif/active`,
-    })
-
+    const response = await spotifActive()
     res.status(200).json({
       success: true,
       message: 'Ok',
-      data: result?.data,
+      data: response?.data,
     })
   } catch (e) {
     console.log('err => ', e)
-    res.status(500).json({ success: false, message: 'Internal server error', error: e?.response })
+    res.status(500).json({ success: false, message: 'Internal server error' })
   }
 })
 
 app.post('/', async (req, res) => {
   const getMessage = req.body.message.text
-  // const response = await spotifActive()
+  const response = await spotifActive()
   const message = {
-    // 1: `Saat ini kalian tergabung di <b>${response?.data?.title ?? ''}</b> <code>jumlah member:${
-    //   response?.data?.member_count ?? 0
-    // }/6</code>, berakhir pada: <b>${format(new Date(response?.data?.expires_at), 'd MMMM yyyy')}</b>`,
+    1: `Saat ini kalian tergabung di <b>${response?.data?.title ?? ''}</b> <code>jumlah member:${
+      response?.data?.member_count ?? 0
+    }/6</code>, berakhir pada: <b>${format(new Date(response?.data?.expires_at), 'd MMMM yyyy')}</b>`,
     2: 'Perkenalkan saya <b>Spotifriend Bot</b>, untuk informasi detailnya bisa melalui perintah: <code>/info</code> https://media.giphy.com/media/Q66ZEIpjEQddUOOKGW/giphy.gif',
   }
 
