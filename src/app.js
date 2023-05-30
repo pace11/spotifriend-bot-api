@@ -57,12 +57,12 @@ app.post('/', async (req, res) => {
   } catch (error) {}
 })
 
-// This should be the last route else any after it won't work
-app.use('*', (_, res) => {
-  res.status(404).json({
-    success: false,
-    message: 'Page not found',
-  })
-})
+// // This should be the last route else any after it won't work
+// app.use('*', (_, res) => {
+//   res.status(404).json({
+//     success: false,
+//     message: 'Page not found',
+//   })
+// })
 
 module.exports = app
