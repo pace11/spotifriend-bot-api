@@ -35,29 +35,26 @@ app.post('/say-something', auth, async (req, res) => {
     //   url: `${process.env.URL_TELEGRAM_API}/${process.env.BOT_TOKEN}/sendMessage?chat_id=${process.env.CHAT_ID}&parse_mode=MarkdownV2&text=${message}`,
     // })
     res.status(200).json({ success: true, message: 'Ok' })
-  } catch (error) {}
+  } catch (e) {
+    res
+      .status(500)
+      .json({ success: false, message: 'Internal server error' })
+  }
 })
 
 app.post('/', async (req, res) => {
-  const chatId = req.body.message.chat.id
-  const sentMessage = req.body.message.text
+  const getMessage = req.body.message.text
+  const message =
+    'Maaf yah, creatorku lagi kerjain, aku masih pusing jawabnya'
 
-  // Regex for hello
-  if (sentMessage.match(/hello/gi)) {
-    axios
-      .post(`${url}${apiToken}/sendMessage`, {
-        chat_id: chatId,
-        text: 'hello back 👋',
+  try {
+    if (getMessage.match(/hello/gi)) {
+      await axios({
+        method: 'GET',
+        url: `${process.env.URL_TELEGRAM_API}/${process.env.BOT_TOKEN}/sendMessage?chat_id=${process.env.CHAT_ID}&parse_mode=MarkdownV2&text=${message}`,
       })
-      .then((response) => {
-        res.status(200).send(response)
-      })
-      .catch((error) => {
-        res.send(error)
-      })
-  } else {
-    res.status(200).send({})
-  }
+    }
+  } catch (error) {}
 })
 
 // This should be the last route else any after it won't work
