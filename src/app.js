@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 const axios = require('axios')
 const cors = require('cors')
 const helmet = require('helmet')
-// const auth = require('../middleware/auth')
+const auth = require('../middleware/auth')
 const { spotifActive } = require('../api/external')
 const { format } = require('date-fns')
 
@@ -29,28 +29,37 @@ app.get('/health', async (req, res) => {
   }
 })
 
-// app.post('/say-something', auth, async (req, res) => {
-//   try {
-//     const response = await spotifActive()
-//     const message = `Saat ini kalian tergabung di <b>${response?.data?.title ?? ''}</b> <code>jumlah member:${
-//       response?.data?.member_count ?? 0
-//     }/6</code>, berakhir pada: <b>${format(
-//       new Date(response?.data?.expires_at),
-//       'd MMMM yyyy',
-//     )}</b> https://media.giphy.com/media/Q66ZEIpjEQddUOOKGW/giphy.gif`
-//     await axios({
-//       method: 'GET',
-//       url: `${process.env.URL_TELEGRAM_API}/${process.env.BOT_TOKEN}/sendMessage?chat_id=${process.env.CHAT_ID}&parse_mode=html&text=${message}`,
-//     })
-//     res.status(200).json({
-//       success: true,
-//       message: 'Ok',
-//     })
-//   } catch (e) {
-//     console.log('err => ', e)
-//     res.status(500).json({ success: false, message: 'Internal server error' })
-//   }
-// })
+app.post('/say-something', auth, async (req, res) => {
+  try {
+    const response = await spotifActive()
+    const message = `https://media.giphy.com/media/Q66ZEIpjEQddUOOKGW/giphy.gif`
+    await axios({
+      method: 'GET',
+      url: `${process.env.URL_TELEGRAM_API}/${process.env.BOT_TOKEN}/sendMessage?chat_id=${process.env.CHAT_ID}&parse_mode=html&text=${message}`,
+    })
+    res.status(200).json({
+      success: true,
+      message: 'Ok',
+    })
+  } catch (e) {
+    console.log('err => ', e)
+    res.status(500).json({ success: false, message: 'Internal server error' })
+  }
+})
+
+app.post('/test', async (req, res) => {
+  try {
+    const response = await spotifActive()
+    res.status(200).json({
+      success: true,
+      message: 'Ok',
+      data: response?.data,
+    })
+  } catch (e) {
+    console.log('err => ', e)
+    res.status(500).json({ success: false, message: 'Internal server error', error: e?.response })
+  }
+})
 
 app.post('/', async (req, res) => {
   const getMessage = req.body.message.text
