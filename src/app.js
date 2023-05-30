@@ -49,11 +49,15 @@ app.post('/say-something', auth, async (req, res) => {
 
 app.post('/test', async (req, res) => {
   try {
-    const response = await spotifActive()
+    const result = await axios({
+      method: 'GET',
+      url: `${process.env.URL_SERVICE_API}/spotify-notif/active`,
+    })
+
     res.status(200).json({
       success: true,
       message: 'Ok',
-      data: response?.data,
+      data: result?.data,
     })
   } catch (e) {
     console.log('err => ', e)
