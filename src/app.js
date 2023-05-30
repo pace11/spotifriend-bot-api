@@ -54,11 +54,11 @@ app.get('/health', async (req, res) => {
 
 app.post('/', async (req, res) => {
   const getMessage = req.body.message.text
-  const response = await spotifActive()
+  // const response = await spotifActive()
   const message = {
-    1: `Saat ini kalian tergabung di <b>${response?.data?.title ?? ''}</b> <code>jumlah member:${
-      response?.data?.member_count ?? 0
-    }/6</code>, berakhir pada: <b>${format(new Date(response?.data?.expires_at), 'd MMMM yyyy')}</b>`,
+    // 1: `Saat ini kalian tergabung di <b>${response?.data?.title ?? ''}</b> <code>jumlah member:${
+    //   response?.data?.member_count ?? 0
+    // }/6</code>, berakhir pada: <b>${format(new Date(response?.data?.expires_at), 'd MMMM yyyy')}</b>`,
     2: 'Perkenalkan saya <b>Spotifriend Bot</b>, untuk informasi detailnya bisa melalui perintah: <code>/info</code> https://media.giphy.com/media/Q66ZEIpjEQddUOOKGW/giphy.gif',
   }
 
