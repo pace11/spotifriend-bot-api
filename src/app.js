@@ -80,13 +80,13 @@ app.post('/', async (req, res) => {
       res.status(200).json({ success: true, message: 'Ok' })
     }
 
-    // if (getMessage.match(/info/gi)) {
-    //   await axios({
-    //     method: 'GET',
-    //     url: `${process.env.URL_TELEGRAM_API}/${process.env.BOT_TOKEN}/sendMessage?chat_id=${process.env.CHAT_ID}&parse_mode=html&text=${message[1]}`,
-    //   })
-    //   res.status(200).json({ success: true, message: 'Ok' })
-    // }
+    if (getMessage.match(/info/gi)) {
+      await axios({
+        method: 'GET',
+        url: `${process.env.URL_TELEGRAM_API}/${process.env.BOT_TOKEN}/sendMessage?chat_id=${process.env.CHAT_ID}&parse_mode=html&text=${message[1]}`,
+      })
+      res.status(200).json({ success: true, message: 'Ok' })
+    }
   } catch (e) {
     res.status(500).json({ success: false, message: 'Internal server error' })
   }
