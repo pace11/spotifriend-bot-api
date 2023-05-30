@@ -63,7 +63,7 @@ app.post('/', async (req, res) => {
   }
 
   try {
-    if (getMessage.match(/hello|hi/gi)) {
+    if (getMessage.match(/hello/gi)) {
       await axios({
         method: 'GET',
         url: `${process.env.URL_TELEGRAM_API}/${process.env.BOT_TOKEN}/sendMessage?chat_id=${process.env.CHAT_ID}&parse_mode=MarkdownV2&text=${message[2]}`,
