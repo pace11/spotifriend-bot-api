@@ -53,6 +53,9 @@ app.post('/', async (req, res) => {
         method: 'GET',
         url: `${process.env.URL_TELEGRAM_API}/${process.env.BOT_TOKEN}/sendMessage?chat_id=${process.env.CHAT_ID}&parse_mode=MarkdownV2&text=${message}`,
       })
+      res.status(200).json({ success: true, message: 'Ok' })
+    } else {
+      res.status(200).json({ success: true, message: 'Ok' })
     }
   } catch (error) {}
 })
