@@ -6,6 +6,7 @@ const helmet = require('helmet')
 const auth = require('../middleware/auth')
 const { spotifActive } = require('../api/external')
 const { format } = require('date-fns')
+const { translate } = require('@vitalets/google-translate-api')
 
 require('dotenv').config()
 
@@ -14,35 +15,47 @@ app.use(helmet()) // security api
 app.use(bodyParser.json()) // body parser
 app.use(cors()) // handing cors
 
-app.get('/health', async (req, res) => {
-  const healthcheck = {
-    uptime: process.uptime(),
-    responsetime: process.hrtime(),
-    message: 'OK',
-    timestamp: Date.now(),
-  }
+app.get('/', async (req, res) => {
   try {
-    res.status(200).send(healthcheck)
+    res.status(200).json({ message: 'Please contact developer for more information' })
   } catch (error) {
     healthcheck.message = error
     res.status(503).send()
   }
 })
 
+app.get('/health', async (req, res) => {
+  const healthcheck = {
+    uptime: process.uptime(),
+    responsetime: process.hrtime(),
+    message: 'Ok',
+    timestamp: Date.now(),
+  }
+  try {
+    res.status(200).json(healthcheck)
+  } catch (error) {
+    healthcheck.message = error
+    res.status(503).json()
+  }
+})
+
 app.post('/say-something', auth, async (req, res) => {
   try {
-    const response = await spotifActive()
-    const message = `https://media.giphy.com/media/Q66ZEIpjEQddUOOKGW/giphy.gif`
+    const response = await axios({
+      method: 'GET',
+      url: `${process.env.URL_RANDOM_QUOTES_API}/random`,
+    })
+
+    const { text } = await translate(`${response?.data?.content}`, { to: 'id' })
+    const message = `<b>Hallo Gengs!!</b> gimana kabarnya hari ini?? semoga sehat selalu. Ada quotes menarik dari <em>${response?.data?.author} - ${text}.</em> So, semangat terus ya untuk hari ini & nikmati musik favorit kalian di <b>Spotify Premium</b>`
+
     await axios({
       method: 'GET',
       url: `${process.env.URL_TELEGRAM_API}/${process.env.BOT_TOKEN}/sendMessage?chat_id=${process.env.CHAT_ID}&parse_mode=html&text=${message}`,
     })
-    res.status(200).json({
-      success: true,
-      message: 'Ok',
-    })
+
+    res.status(200).json({ success: true, message: 'Ok' })
   } catch (e) {
-    console.log('err => ', e)
     res.status(500).json({ success: false, message: 'Internal server error' })
   }
 })
