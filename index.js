@@ -5,7 +5,7 @@ const cors = require('cors')
 const helmet = require('helmet')
 const auth = require('./middleware/auth')
 const { spotifActive } = require('./api/external')
-const { format, differenceInDays } = require('date-fns')
+const { format, differenceInDays, differenceInMonths } = require('date-fns')
 const { translate } = require('@vitalets/google-translate-api')
 
 require('dotenv').config()
@@ -80,7 +80,9 @@ app.post('/test', async (req, res) => {
 app.post('/', async (req, res) => {
   const getMessage = req.body.message.text
   const response = await spotifActive()
-  const diff = differenceInDays(new Date(response?.data?.expires_at), new Date())
+  const days = differenceInDays(new Date(response?.data?.expires_at), new Date())
+  const month = differenceInMonths(new Date(response?.data?.expires_at), new Date())
+  const diffDate = `${month > 1 ? month + ' bulan lagi' : days + ' hari lagi'}`
 
   const message = {
     1: `Saat ini kalian tergabung di <b>${response?.data?.title ?? ''}</b> <code>jumlah member:${
@@ -88,7 +90,7 @@ app.post('/', async (req, res) => {
     }/6</code>, <code>plan:${response?.data?.plan} bulan</code> berakhir pada: <b>${format(
       new Date(response?.data?.expires_at),
       'd MMMM yyyy',
-    )} (${diff} hari lagi)</b>`,
+    )} (${diffDate})</b>`,
     2: 'Perkenalkan saya <b>Spotifriend Bot</b>, untuk informasi detailnya bisa melalui perintah: <code>/info</code> https://media.giphy.com/media/Q66ZEIpjEQddUOOKGW/giphy.gif',
   }
 
