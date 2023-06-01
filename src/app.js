@@ -5,7 +5,7 @@ const cors = require('cors')
 const helmet = require('helmet')
 const auth = require('../middleware/auth')
 const { spotifActive } = require('../api/external')
-const { format } = require('date-fns')
+const { format, differenceInDays } = require('date-fns')
 const { translate } = require('@vitalets/google-translate-api')
 
 require('dotenv').config()
@@ -47,7 +47,7 @@ app.post('/say-something', auth, async (req, res) => {
     })
 
     const { text } = await translate(`${response?.data?.content}`, { to: 'id' })
-    const message = `<b>Hallo Gengs!!</b> gimana kabarnya hari ini?? semoga sehat selalu. Ada quotes menarik dari <em>${response?.data?.author} - ${text}.</em> So, semangat terus ya untuk hari ini & nikmati musik favorit kalian di <b>Spotify Premium</b>`
+    const message = `<b>Hallo Gengs!!</b> gimana kabarnya hari ini?? semoga sehat selalu. Ada quotes menarik dari <em>${response?.data?.author} - ${text}.</em> So, semangat terus ya untuk hari ini`
 
     await axios({
       method: 'GET',
@@ -63,6 +63,7 @@ app.post('/say-something', auth, async (req, res) => {
 app.post('/test', async (req, res) => {
   try {
     const response = await spotifActive()
+
     res.status(200).json({
       success: true,
       message: 'Ok',
@@ -77,10 +78,12 @@ app.post('/test', async (req, res) => {
 app.post('/', async (req, res) => {
   const getMessage = req.body.message.text
   const response = await spotifActive()
+  const diff = differenceInDays(new Date(response?.data?.expires_at), new Date())
+
   const message = {
     1: `Saat ini kalian tergabung di <b>${response?.data?.title ?? ''}</b> <code>jumlah member:${
       response?.data?.member_count ?? 0
-    }/6</code>, berakhir pada: <b>${format(new Date(response?.data?.expires_at), 'd MMMM yyyy')}</b>`,
+    }/6</code>, berakhir pada: <b>${format(new Date(response?.data?.expires_at), 'd MMMM yyyy')} (${diff} hari lagi)</b>`,
     2: 'Perkenalkan saya <b>Spotifriend Bot</b>, untuk informasi detailnya bisa melalui perintah: <code>/info</code> https://media.giphy.com/media/Q66ZEIpjEQddUOOKGW/giphy.gif',
   }
 
