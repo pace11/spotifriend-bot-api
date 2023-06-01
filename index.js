@@ -85,7 +85,7 @@ app.post('/', async (req, res) => {
   const message = {
     1: `Saat ini kalian tergabung di <b>${response?.data?.title ?? ''}</b> <code>jumlah member:${
       response?.data?.member_count ?? 0
-    }/6</code>, <code>plan: ${response?.data?.plan} bulan</code> berakhir pada: <b>${format(
+    }/6</code>, <code>plan:${response?.data?.plan} bulan</code> berakhir pada: <b>${format(
       new Date(response?.data?.expires_at),
       'd MMMM yyyy',
     )} (${diff} hari lagi)</b>`,
