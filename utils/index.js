@@ -9,8 +9,11 @@ const sayHello = () => {
 }
 
 const sayInfo = (data) => {
-  const days = differenceInDays(new Date(data?.expires_at), new Date())
-  const month = differenceInMonths(new Date(data?.expires_at), new Date())
+  const days = differenceInDays(new Date(data?.expires_at ?? null), new Date())
+  const month = differenceInMonths(
+    new Date(data?.expires_at ?? null),
+    new Date(),
+  )
   const diffDate = `${month > 1 ? month + ' bulan lagi' : days + ' hari lagi'}`
 
   return `Saat ini kalian tergabung di <b>${
@@ -18,7 +21,7 @@ const sayInfo = (data) => {
   }</b> <code>jumlah member:${data?.member_count ?? 0}/6</code>, <code>plan:${
     data?.plan
   } bulan</code> berakhir pada: <b>${format(
-    new Date(data?.expires_at),
+    new Date(data?.expires_at ?? null),
     'd MMMM yyyy',
   )} (${diffDate})</b>`
 }
