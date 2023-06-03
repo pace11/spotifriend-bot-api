@@ -9,7 +9,7 @@ const sayHello = () => {
 }
 
 const sayThanks = () => {
-  return 'Sama2 Kak !! senang bisa membantu https://media.giphy.com/media/3oFzm6XsCKxVRbZDLq/giphy-downsized-large.gif'
+  return 'Sama2 Kak !! https://media.giphy.com/media/3oFzm6XsCKxVRbZDLq/giphy-downsized-large.gif'
 }
 
 const sayInfo = (data) => {
