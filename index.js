@@ -99,8 +99,6 @@ app.post('/', async (req, res) => {
           data: response?.data,
         })}`,
       })
-
-      res.status(200).json({ success: true, message: 'Ok' })
     }
 
     if (getMessage.match(/info/gi)) {
@@ -115,9 +113,27 @@ app.post('/', async (req, res) => {
           data: response?.data,
         })}`,
       })
-
-      res.status(200).json({ success: true, message: 'Ok' })
     }
+
+    if (
+      getMessage.match(
+        /terima\skasih|trima\skasih|trm\sksh|thx|thanks|ty|thanks\syou|thank\syou|mksh|makasih|mksih|nuhun/gi,
+      )
+    ) {
+      await axios({
+        method: 'GET',
+        url: `${process.env.URL_TELEGRAM_API}/${
+          process.env.BOT_TOKEN
+        }/sendMessage?chat_id=${
+          process.env.CHAT_ID
+        }&parse_mode=html&text=${renderText({
+          type: 'thanks',
+          data: response?.data,
+        })}`,
+      })
+    }
+
+    res.status(200).json({ success: true, message: 'Ok' })
   } catch (e) {
     res.status(500).json({ success: false, message: 'Internal server error' })
   }

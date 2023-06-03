@@ -8,6 +8,10 @@ const sayHello = () => {
   return 'Perkenalkan saya <b>Spotifriend Bot</b>, untuk informasi detailnya bisa melalui perintah: <code>/info</code> https://media.giphy.com/media/Q66ZEIpjEQddUOOKGW/giphy.gif'
 }
 
+const sayThanks = () => {
+  return 'Sama2 Kak !! senang bisa membantu https://media.giphy.com/media/3oFzm6XsCKxVRbZDLq/giphy-downsized-large.gif'
+}
+
 const sayInfo = (data) => {
   const days = differenceInDays(new Date(data?.expires_at ?? null), new Date())
   const month = differenceInMonths(
@@ -31,6 +35,7 @@ const renderText = ({ type, data }) => {
     says: saySomething(data),
     hello: sayHello(),
     info: sayInfo(data),
+    thanks: sayThanks(),
   }
 
   return template[type] ?? template?.hello
