@@ -1,7 +1,26 @@
 const { format, differenceInDays, differenceInMonths } = require('date-fns')
 
 const saySomething = (data) => {
+  const days = differenceInDays(new Date(data?.expires_at ?? null), new Date())
+
+  if (data?.id && days <= 30) {
+    return sayExpiresSoon({ ...data, days })
+  }
+
+  if (!data?.id) {
+    return sayNoMembership()
+  }
+
   return `<b>Hallo Gengs!!</b> gimana kabarnya hari ini?? semoga sehat selalu. Ada quotes menarik dari <em><b>${data?.author}</b> - ${data?.content}.</em> So, semangat terus ya untuk hari ini`
+}
+
+const sayExpiresSoon = (data) => {
+  return `<b>Hallo Gengs!!</b> saya mau menginfokan kalau paket <b>${
+    data?.title ?? ''
+  }</b> akan segera berakhir pada <b>${format(
+    new Date(data?.expires_at ?? null),
+    'd MMMM yyyy',
+  )} (${data?.days} hari lagi)</b>`
 }
 
 const sayHello = () => {
@@ -10,6 +29,10 @@ const sayHello = () => {
 
 const sayThanks = () => {
   return 'Sama2 Kak !! https://media.giphy.com/media/3oFzm6XsCKxVRbZDLq/giphy-downsized-large.gif'
+}
+
+const sayNoMembership = () => {
+  return 'Saat ini belum ada Spotify Membership yang aktif, segera hubungi admin untuk mengaktifkan Membership'
 }
 
 const sayInfo = (data) => {
@@ -36,6 +59,7 @@ const renderText = ({ type, data }) => {
     hello: sayHello(),
     info: sayInfo(data),
     thanks: sayThanks(),
+    noMembership: sayNoMembership(),
   }
 
   return template[type] ?? template?.hello

@@ -44,6 +44,7 @@ app.get('/health', async (req, res) => {
 
 app.post('/say-something', auth, async (req, res) => {
   try {
+    const responseSpotify = await spotifActive()
     const response = await randomQuotes()
     const translate = await translateId(response?.content)
 
@@ -55,7 +56,11 @@ app.post('/say-something', auth, async (req, res) => {
         process.env.CHAT_ID
       }&parse_mode=html&text=${renderText({
         type: 'says',
-        data: { content: translate, author: response?.author },
+        data: {
+          content: translate,
+          author: response?.author,
+          ...responseSpotify?.data,
+        },
       })}`,
     })
 
@@ -109,7 +114,7 @@ app.post('/', async (req, res) => {
         }/sendMessage?chat_id=${
           process.env.CHAT_ID
         }&parse_mode=html&text=${renderText({
-          type: 'info',
+          type: !!response?.data ? 'info' : 'noMembership',
           data: response?.data,
         })}`,
       })

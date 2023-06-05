@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node --watch index.js"
+    "start": "cp .env.local .env && node --watch index.js",
+    "start:staging": "cp .env.staging .env && node --watch index.js"
   },
   "engines": {
     "node": "^18"
